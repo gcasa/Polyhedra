@@ -416,20 +416,20 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
 // Draw the polyhedron at the current position.
 - (id) drawPolyhedron
 {
-  int        i, j, k, m, n=0;
-  float    faceVerticesZ[MAX_NUM_FACES][MAX_VERTICES_PER_FACE];
-  float    sortedVerticesZ[MAX_NUM_FACES][MAX_VERTICES_PER_FACE];
-  NSPoint    faceVerticesScreen[MAX_NUM_FACES][MAX_VERTICES_PER_FACE];
+  int     i, j, k, m, n=0;
+  float   faceVerticesZ[MAX_NUM_FACES][MAX_VERTICES_PER_FACE];
+  float   sortedVerticesZ[MAX_NUM_FACES][MAX_VERTICES_PER_FACE];
+  NSPoint faceVerticesScreen[MAX_NUM_FACES][MAX_VERTICES_PER_FACE];
   BOOL    drawn[MAX_NUM_FACES];
   BOOL    intersect;
-  NSPoint    *thisFace, *tempFace, *firstVertex, *secondVertex, *thirdVertex, *fourthVertex;
-  int    colours[MAX_NUM_FACES];
-  float    r[MAX_NUM_FACES];
-  float    g[MAX_NUM_FACES];
-  float    b[MAX_NUM_FACES];
-  VERTEX    *thisVertex;
-  float    firstVertexZ, secondVertexZ, thirdVertexZ, fourthVertexZ;
-  float    det, s=0, t=0;
+  NSPoint *thisFace, *tempFace, *firstVertex, *secondVertex, *thirdVertex, *fourthVertex;
+  int     colours[MAX_NUM_FACES];
+  float   r[MAX_NUM_FACES];
+  float   g[MAX_NUM_FACES];
+  float   b[MAX_NUM_FACES];
+  VERTEX  *thisVertex;
+  float   firstVertexZ, secondVertexZ, thirdVertexZ, fourthVertexZ;
+  float   det, s=0, t=0;
   
   // Pre-compute the positions of each of the vertices as they're drawn on the screen.  We'll need
   // them a little later, and we'll keep them around until we erase this polyhedron from the screen.
@@ -437,9 +437,9 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
     {
       thisVertex = &(vertices[i]);
       thisVertex->screenPos.x = perspectivePt.x + (thisVertex->pos.x - perspectivePt.x) *
-    perspectivePt.z / (perspectivePt.z + thisVertex->pos.z);
+        perspectivePt.z / (perspectivePt.z + thisVertex->pos.z);
       thisVertex->screenPos.y = perspectivePt.y + (thisVertex->pos.y - perspectivePt.y) *
-    perspectivePt.z / (perspectivePt.z + thisVertex->pos.z);
+        perspectivePt.z / (perspectivePt.z + thisVertex->pos.z);
       // NSLog(@"%f, %f ... %f, %f",thisVertex->pos.x, thisVertex->pos.y, vertices[i].pos.x, vertices[i].pos.y);
     }
   // Pick out the faces we have to draw, and grab an ordered list of the z-coordinates of each
@@ -448,27 +448,27 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
   for (i = 0; i < numFaces; i++)
     if (faceColour[polyhedron][i] != NO_DRAW)
       {
-    for (j = 0; j < verticesPerFace; j++)
-      {
-        thisVertex = &(vertices[faces[polyhedron][i][j]]);
-        // NSLog(@"thisVertex->screenPos.x = %f", thisVertex->screenPos.x);
-        faceVerticesScreen[k][j] = thisVertex->screenPos;
-        faceVerticesZ[k][j] = thisVertex->pos.z;
-        for (m = 0; (m < j) && (sortedVerticesZ[k][m] > thisVertex->pos.z); m++)
-          ;
-        for (n = j; n > m; n--)
-          sortedVerticesZ[k][n] = sortedVerticesZ[k][n - 1];
-        sortedVerticesZ[k][m] = thisVertex->pos.z;
-      }
-    colours[k] = faceColour[polyhedron][i];
-    if (colours[k] != TRANSPARENT)
-      {
-        r[k] = clut[colours[k]].r;
-        g[k] = clut[colours[k]].g;
-        b[k] = clut[colours[k]].b;
-      }
-    drawn[k] = NO;
-    k++;
+        for (j = 0; j < verticesPerFace; j++)
+          {
+            thisVertex = &(vertices[faces[polyhedron][i][j]]);
+            // NSLog(@"thisVertex->screenPos.x = %f", thisVertex->screenPos.x);
+            faceVerticesScreen[k][j] = thisVertex->screenPos;
+            faceVerticesZ[k][j] = thisVertex->pos.z;
+            for (m = 0; (m < j) && (sortedVerticesZ[k][m] > thisVertex->pos.z); m++)
+              ;
+            for (n = j; n > m; n--)
+              sortedVerticesZ[k][n] = sortedVerticesZ[k][n - 1];
+            sortedVerticesZ[k][m] = thisVertex->pos.z;
+          }
+        colours[k] = faceColour[polyhedron][i];
+        if (colours[k] != TRANSPARENT)
+          {
+            r[k] = clut[colours[k]].r;
+            g[k] = clut[colours[k]].g;
+            b[k] = clut[colours[k]].b;
+          }
+        drawn[k] = NO;
+        k++;
       }
   // Now, run through the list of faces we have to draw, and select the next one to
   // draw - by making sure that it's not in front of any faces we haven't drawn
@@ -511,31 +511,30 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
         // if no edges intersect, order by z-coordinates.
         if (!intersect)
           {
-        for (m = 0; (m < verticesPerFace) && (sortedVerticesZ[k][m] == sortedVerticesZ[j][m]); m++)
-          ;
-        if ((m != verticesPerFace) && (sortedVerticesZ[j][m] > sortedVerticesZ[k][m]))
-          {
-            k = j;
-            thisFace = tempFace;
-          }
-        //                    else
-        //                        ;
+            for (m = 0; (m < verticesPerFace) && (sortedVerticesZ[k][m] == sortedVerticesZ[j][m]); m++);
+            if ((m != verticesPerFace) && (sortedVerticesZ[j][m] > sortedVerticesZ[k][m]))
+              {
+                k = j;
+                thisFace = tempFace;
+              }
+            //                    else
+            //                        ;
           }
         else
           // if there's a pair of edges intersecting, look at the z-coord at the
           // intersection pt - the largest z-coord is the one we drawn.
           {
-        firstVertexZ = faceVerticesZ[k][m];
-        secondVertexZ = (m + 1 == verticesPerFace) ? faceVerticesZ[k][0] :
-          faceVerticesZ[k][m + 1];
-        thirdVertexZ = faceVerticesZ[j][n];
-        fourthVertexZ = (n + 1 == verticesPerFace) ? faceVerticesZ[j][0] :
-          faceVerticesZ[j][n + 1];
-        if (firstVertexZ * t + secondVertexZ * (1 - t) < thirdVertexZ * s + fourthVertexZ * (1 - s))
-          {
-            k = j;
-            thisFace = tempFace;
-          }
+            firstVertexZ = faceVerticesZ[k][m];
+            secondVertexZ = (m + 1 == verticesPerFace) ? faceVerticesZ[k][0] :
+              faceVerticesZ[k][m + 1];
+            thirdVertexZ = faceVerticesZ[j][n];
+            fourthVertexZ = (n + 1 == verticesPerFace) ? faceVerticesZ[j][0] :
+              faceVerticesZ[j][n + 1];
+            if (firstVertexZ * t + secondVertexZ * (1 - t) < thirdVertexZ * s + fourthVertexZ * (1 - s))
+              {
+                k = j;
+                thisFace = tempFace;
+              }
           }
       }
       
@@ -591,11 +590,11 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
 // being fast, fast, fast.
 - (id) erasePolyhedron
 {
-  int        i;
-  NSRect    eraseRect;
+  int      i;
+  NSRect   eraseRect;
   float    maxX, maxY, minX, minY;
-  NSPoint    thisPt;
-  float         border = 50;
+  NSPoint  thisPt;
+  float    border = 50;
 
   maxY = maxX = 0;
   minX = [self bounds].size.width;
@@ -604,13 +603,13 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
     {
       thisPt = vertices[i].screenPos;
       if (thisPt.x > maxX)
-    maxX = thisPt.x;
+          maxX = thisPt.x;
       if (thisPt.y > maxY)
-    maxY = thisPt.y;
+          maxY = thisPt.y;
       if (thisPt.x < minX)
-    minX = thisPt.x;
+          minX = thisPt.x;
       if (thisPt.y < minY)
-    minY = thisPt.y;
+          minY = thisPt.y;
     }
   
   eraseRect.origin.x = (minX > border)?minX - 10:minX - border - 10;
@@ -628,7 +627,7 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
 // Do one animation step.
 - (void) oneStep
 {
-    int        i, j;
+    int      i, j;
     float    length;
     float    dotProduct;
     D3_PT    velForce[MAX_NUM_VERTICES], force[MAX_NUM_VERTICES];
@@ -695,13 +694,13 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
       {
         vertices[i].pos.x += vertices[i].vel.x;
         if ((vertices[i].pos.x < 0) || (vertices[i].pos.x > backTopRight.x))
-      vertices[i].vel.x = -vertices[i].vel.x;
+            vertices[i].vel.x = -vertices[i].vel.x;
         vertices[i].pos.y += vertices[i].vel.y;
         if ((vertices[i].pos.y < 0) || (vertices[i].pos.y > backTopRight.y))
-      vertices[i].vel.y = -vertices[i].vel.y;
+            vertices[i].vel.y = -vertices[i].vel.y;
         vertices[i].pos.z += vertices[i].vel.z;
         if ((vertices[i].pos.z < 0) || (vertices[i].pos.z > backTopRight.z))
-      vertices[i].vel.z = -vertices[i].vel.z;
+            vertices[i].vel.z = -vertices[i].vel.z;
       }
     // draw it
     [self drawPolyhedron];
@@ -763,13 +762,13 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
       {
         vertices[i].vel.x += (velForce[i].x + force[i].x) / vertices[i].mass;
         if (fabs(vertices[i].vel.x) > MAX_VEL)
-      vertices[i].vel.x = vertices[i].vel.x / fabs(vertices[i].vel.x) * MAX_VEL;
+            vertices[i].vel.x = vertices[i].vel.x / fabs(vertices[i].vel.x) * MAX_VEL;
         vertices[i].vel.y += (velForce[i].y + force[i].y) / vertices[i].mass;
         if (fabs(vertices[i].vel.y) > MAX_VEL)
-      vertices[i].vel.y = vertices[i].vel.y / fabs(vertices[i].vel.y) * MAX_VEL;
+            vertices[i].vel.y = vertices[i].vel.y / fabs(vertices[i].vel.y) * MAX_VEL;
         vertices[i].vel.z += (velForce[i].z + force[i].z) / vertices[i].mass;
         if (fabs(vertices[i].vel.z) > MAX_VEL)
-      vertices[i].vel.z = vertices[i].vel.z / fabs(vertices[i].vel.z) * MAX_VEL;
+            vertices[i].vel.z = vertices[i].vel.z / fabs(vertices[i].vel.z) * MAX_VEL;
       }
       
       // return self;
@@ -884,18 +883,18 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
   for (i = 0; i < numVertices; i++)
     {
       for (j = 0; j < numVertices; j++)
-    isAdjacent[i][j] = NO;
+          isAdjacent[i][j] = NO;
       for (j = 0; j < numFaces; j++)
-    {
-      foundVertex = NO;
-      for (k = 0; k < verticesPerFace; k++)
-        if (faces[polyhedron][j][k] == i)
-          foundVertex = YES;
-      if (foundVertex)
-        for (k = 0; k < verticesPerFace; k++)
-          if (faces[polyhedron][j][k] != i)
-        isAdjacent[i][faces[polyhedron][j][k]] = YES;
-    }
+        {
+            foundVertex = NO;
+            for (k = 0; k < verticesPerFace; k++)
+            if (faces[polyhedron][j][k] == i)
+              foundVertex = YES;
+            if (foundVertex)
+            for (k = 0; k < verticesPerFace; k++)
+              if (faces[polyhedron][j][k] != i)
+                  isAdjacent[i][faces[polyhedron][j][k]] = YES;
+        }
     }
   
   realAdjacents = 0;
@@ -973,9 +972,9 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
       // sprintf(buf,"%s/Polyhedra.nib",[sender moduleDirectory:"Polyhedra"]);
       // [NXApp loadNibFile:buf owner:self withNames:NO];
       if(![NSBundle loadNibNamed: @"Polyhedra" owner:self])
-    {
-      NSLog(@"Failed to load");
-    }
+        {
+          NSLog(@"Failed to load");
+        }
     }
   // NSLog(@"inspector: %@",inspectorPanel);
   return inspectorPanel;
