@@ -333,17 +333,20 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
 // Just erase ourself.
 - (void) drawRect:(NSRect)rects // :(int)rectCount
 {
-  PSsetlinewidth(0);
-  PSsetgray(1);
-    NSBezierPath *currentPath = [NSBezierPath bezierPath];
-    [[NSColor whiteColor] setFill];
-    [currentPath fill];
-  NSRectFill(rects);
+    PSsetlinewidth(0);
+    PSsetgray(1);
+    NSRectFill(rects);
+
+    // NSBezierPath *currentPath = [NSBezierPath bezierPath];
+    // [[NSColor whiteColor] setFill];
+    // [currentPath fill];
+
 }
 
 - (void)animateOneFrame
 {
     NSLog(@"Step");
+    
     [self oneStep];
     return;
 }
@@ -581,7 +584,6 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
   
   return self;
 }
-
 
 // Erase the polyhedron.  Quick, and dirty - just erase a large rectangle that
 // covers the entire polyhedron on the screen - if it erase some of the background, so

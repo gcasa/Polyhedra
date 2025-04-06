@@ -56,7 +56,6 @@ void PSfill(void)
         [[NSColor blackColor] setFill];
     }
     [_currentPath fill];
-    // [_currentPath release];
     _currentPath = nil;
 }
 
@@ -68,6 +67,5 @@ void PSstroke(void)
         [[NSColor blackColor] setStroke];
     }
     [_currentPath stroke];
-    // [_currentPath release];
     _currentPath = nil;
 }
