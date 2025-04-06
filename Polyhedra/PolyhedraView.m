@@ -640,49 +640,49 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
       {
         // NSLog(@"Called1");
         switch (backStep / 20)
-      {
-  #ifdef VANNA
-      case 0:
-        [self drawBoxInColour:NSWhite];
-        break;
-      case 1:
-        [self drawBoxInColour:NSLightGray];
-        break;
-      case 2:
-        [self drawBoxInColour:NSDarkGray];
-        break;
-      case 3:
-        [self drawBoxInColour:NSBlack];
-        break;
-  #endif
-      default:
-        // Compute average velocity of icosahedron
-        // If it's too small, give it a random kick
-        sumVel.x = sumVel.y = sumVel.z = 0;
-        for (i = 0; i < numVertices; i++)
-          {
-            // NSLog(@"Called2");
-            
-            sumVel.x += vertices[i].vel.x;
-            sumVel.y += vertices[i].vel.y;
-            sumVel.z += vertices[i].vel.z;
-          }
-        if (distance(sumVel.x, sumVel.y, sumVel.z) / numVertices < 0.5) //.33
-          {
-            sumVel.x = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
-            // NSLog(@"sumVel.x = %f",sumVel.x);
-            sumVel.y = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
-            sumVel.z = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
-            for (i = 0; i < numVertices; i++)
-          {
-            vertices[i].vel.x += sumVel.x;
-            vertices[i].vel.y += sumVel.y;
-            vertices[i].vel.z += sumVel.z;
-          }
-          }
-        backStep = 0;
-        break;
-      }
+        {
+    #ifdef VANNA
+        case 0:
+          [self drawBoxInColour:NSWhite];
+          break;
+        case 1:
+          [self drawBoxInColour:NSLightGray];
+          break;
+        case 2:
+          [self drawBoxInColour:NSDarkGray];
+          break;
+        case 3:
+          [self drawBoxInColour:NSBlack];
+          break;
+    #endif
+        default:
+          // Compute average velocity of icosahedron
+          // If it's too small, give it a random kick
+          sumVel.x = sumVel.y = sumVel.z = 0;
+          for (i = 0; i < numVertices; i++)
+            {
+              // NSLog(@"Called2");
+              
+              sumVel.x += vertices[i].vel.x;
+              sumVel.y += vertices[i].vel.y;
+              sumVel.z += vertices[i].vel.z;
+            }
+          if (distance(sumVel.x, sumVel.y, sumVel.z) / numVertices < 0.5) //.33
+            {
+              sumVel.x = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
+              // NSLog(@"sumVel.x = %f",sumVel.x);
+              sumVel.y = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
+              sumVel.z = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
+              for (i = 0; i < numVertices; i++)
+            {
+              vertices[i].vel.x += sumVel.x;
+              vertices[i].vel.y += sumVel.y;
+              vertices[i].vel.z += sumVel.z;
+            }
+            }
+          backStep = 0;
+          break;
+        }
       }
     // If we're not doing anything about the polyhedron, leave now.
     if (noAnimation)
