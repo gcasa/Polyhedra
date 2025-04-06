@@ -305,12 +305,14 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
     NO_DRAW, NO_DRAW, NO_DRAW, 2, 3,
     4, 0, TRANSPARENT, TRANSPARENT, TRANSPARENT,
     TRANSPARENT, NO_DRAW, 1, NO_DRAW, 2}};
+
 @implementation PolyhedraView
 
 - (instancetype)initWithFrame:(NSRect)frame isPreview:(BOOL)isPreview
 {
     self = [super initWithFrame:frame isPreview:isPreview];
-    if (self) {
+    if (self)
+    {
         [self useNewFrame: frame];
         srand((unsigned int)time(0));
         [self setAnimationTimeInterval:1/30.0];
@@ -332,12 +334,16 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
 - (void) drawRect:(NSRect)rects // :(int)rectCount
 {
   PSsetlinewidth(0);
-  PSsetgray(0);
+  PSsetgray(1);
+    NSBezierPath *currentPath = [NSBezierPath bezierPath];
+    [[NSColor whiteColor] setFill];
+    [currentPath fill];
   NSRectFill(rects);
 }
 
 - (void)animateOneFrame
 {
+    NSLog(@"Step");
     [self oneStep];
     return;
 }
@@ -620,150 +626,152 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
 // Do one animation step.
 - (void) oneStep
 {
-  int        i, j;
-  float    length;
-  float    dotProduct;
-  D3_PT    velForce[MAX_NUM_VERTICES], force[MAX_NUM_VERTICES];
-  float    theForce;
-  D3_PT    sumVel;
-  
-  // NSLog(@"Called");
-  // Cycle the background box colours.
-  if (((backStep ++) % 20) == 0)
-    {
-      // NSLog(@"Called1");
-      switch (backStep / 20)
-    {
-#ifdef VANNA
-    case 0:
-      [self drawBoxInColour:NSWhite];
-      break;
-    case 1:
-      [self drawBoxInColour:NSLightGray];
-      break;
-    case 2:
-      [self drawBoxInColour:NSDarkGray];
-      break;
-    case 3:
-      [self drawBoxInColour:NSBlack];
-      break;
-#endif
-    default:
-      // Compute average velocity of icosahedron
-      // If it's too small, give it a random kick
-      sumVel.x = sumVel.y = sumVel.z = 0;
-      for (i = 0; i < numVertices; i++)
-        {
-          // NSLog(@"Called2");
-          
-          sumVel.x += vertices[i].vel.x;
-          sumVel.y += vertices[i].vel.y;
-          sumVel.z += vertices[i].vel.z;
-        }
-      if (distance(sumVel.x, sumVel.y, sumVel.z) / numVertices < 0.5) //.33
-        {
-          sumVel.x = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
-          // NSLog(@"sumVel.x = %f",sumVel.x);
-          sumVel.y = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
-          sumVel.z = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
-          for (i = 0; i < numVertices; i++)
-        {
-          vertices[i].vel.x += sumVel.x;
-          vertices[i].vel.y += sumVel.y;
-          vertices[i].vel.z += sumVel.z;
-        }
-        }
-      backStep = 0;
-      break;
-    }
-    }
-  // If we're not doing anything about the polyhedron, leave now.
-  if (noAnimation)
-    return;
-  // Erase it.
-  [self erasePolyhedron];
-  // Move it, bouncing off walls as necessary
-  for (i = 0; i < numVertices; i++)
-    {
-      vertices[i].pos.x += vertices[i].vel.x;
-      if ((vertices[i].pos.x < 0) || (vertices[i].pos.x > backTopRight.x))
-    vertices[i].vel.x = -vertices[i].vel.x;
-      vertices[i].pos.y += vertices[i].vel.y;
-      if ((vertices[i].pos.y < 0) || (vertices[i].pos.y > backTopRight.y))
-    vertices[i].vel.y = -vertices[i].vel.y;
-      vertices[i].pos.z += vertices[i].vel.z;
-      if ((vertices[i].pos.z < 0) || (vertices[i].pos.z > backTopRight.z))
-    vertices[i].vel.z = -vertices[i].vel.z;
-    }
-  // draw it
-  [self drawPolyhedron];
-  for (i = 0; i < numVertices; i++)
-    {
-      velForce[i].x = force[i].x = 0;
-      velForce[i].y = force[i].y = 0;
-      velForce[i].z = force[i].z = 0;
-    }
-  // calculate the force on each vertex.
-  // Notice the use of symmetry here to cut down the amount of computation
-  // i.e. the force on vertex j exerted by the spring from vertex i is minus
-  //      that on vertex i exerted by vertex j .....
-  for (i = 0; i < numVertices; i++)
-    {
-      for (j = i + 1; j < numVertices; j++)
-    {
-      // spring forces (Hookes' Law - remember that?)
-      length = distance(vertices[i].pos.x - vertices[j].pos.x,
-                vertices[i].pos.y - vertices[j].pos.y,
-                vertices[i].pos.z - vertices[j].pos.z);
-      theForce = (vertices[i].pos.x - vertices[j].pos.x) / length * (restLengths[i][j] - length) * SPRING_K;
-      force[i].x += theForce;
-      force[j].x -= theForce;
-      theForce = (vertices[i].pos.y - vertices[j].pos.y) / length * (restLengths[i][j] - length) * SPRING_K;
-      force[i].y += theForce;
-      force[j].y -= theForce;
-      theForce = (vertices[i].pos.z - vertices[j].pos.z) / length * (restLengths[i][j] - length) * SPRING_K;
-      force[i].z += theForce;
-      force[j].z -= theForce;
+    int        i, j;
+    float    length;
+    float    dotProduct;
+    D3_PT    velForce[MAX_NUM_VERTICES], force[MAX_NUM_VERTICES];
+    float    theForce;
+    D3_PT    sumVel;
+    
+    // NSLog(@"Called");
+    // Cycle the background box colours.
+    if (((backStep ++) % 20) == 0)
+      {
+        // NSLog(@"Called1");
+        switch (backStep / 20)
+      {
+  #ifdef VANNA
+      case 0:
+        [self drawBoxInColour:NSWhite];
+        break;
+      case 1:
+        [self drawBoxInColour:NSLightGray];
+        break;
+      case 2:
+        [self drawBoxInColour:NSDarkGray];
+        break;
+      case 3:
+        [self drawBoxInColour:NSBlack];
+        break;
+  #endif
+      default:
+        // Compute average velocity of icosahedron
+        // If it's too small, give it a random kick
+        sumVel.x = sumVel.y = sumVel.z = 0;
+        for (i = 0; i < numVertices; i++)
+          {
+            // NSLog(@"Called2");
+            
+            sumVel.x += vertices[i].vel.x;
+            sumVel.y += vertices[i].vel.y;
+            sumVel.z += vertices[i].vel.z;
+          }
+        if (distance(sumVel.x, sumVel.y, sumVel.z) / numVertices < 0.5) //.33
+          {
+            sumVel.x = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
+            // NSLog(@"sumVel.x = %f",sumVel.x);
+            sumVel.y = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
+            sumVel.z = randBetween(-(float)INIT_VELOCITY, (float)INIT_VELOCITY);
+            for (i = 0; i < numVertices; i++)
+          {
+            vertices[i].vel.x += sumVel.x;
+            vertices[i].vel.y += sumVel.y;
+            vertices[i].vel.z += sumVel.z;
+          }
+          }
+        backStep = 0;
+        break;
+      }
+      }
+    // If we're not doing anything about the polyhedron, leave now.
+    if (noAnimation)
+      return;
+    // Erase it.
+    [self erasePolyhedron];
+    // Move it, bouncing off walls as necessary
+    for (i = 0; i < numVertices; i++)
+      {
+        vertices[i].pos.x += vertices[i].vel.x;
+        if ((vertices[i].pos.x < 0) || (vertices[i].pos.x > backTopRight.x))
+      vertices[i].vel.x = -vertices[i].vel.x;
+        vertices[i].pos.y += vertices[i].vel.y;
+        if ((vertices[i].pos.y < 0) || (vertices[i].pos.y > backTopRight.y))
+      vertices[i].vel.y = -vertices[i].vel.y;
+        vertices[i].pos.z += vertices[i].vel.z;
+        if ((vertices[i].pos.z < 0) || (vertices[i].pos.z > backTopRight.z))
+      vertices[i].vel.z = -vertices[i].vel.z;
+      }
+    // draw it
+    [self drawPolyhedron];
+    for (i = 0; i < numVertices; i++)
+      {
+        velForce[i].x = force[i].x = 0;
+        velForce[i].y = force[i].y = 0;
+        velForce[i].z = force[i].z = 0;
+      }
+    // calculate the force on each vertex.
+    // Notice the use of symmetry here to cut down the amount of computation
+    // i.e. the force on vertex j exerted by the spring from vertex i is minus
+    //      that on vertex i exerted by vertex j .....
+    for (i = 0; i < numVertices; i++)
+      {
+        for (j = i + 1; j < numVertices; j++)
+      {
+        // spring forces (Hookes' Law - remember that?)
+        length = distance(vertices[i].pos.x - vertices[j].pos.x,
+                  vertices[i].pos.y - vertices[j].pos.y,
+                  vertices[i].pos.z - vertices[j].pos.z);
+        theForce = (vertices[i].pos.x - vertices[j].pos.x) / length * (restLengths[i][j] - length) * SPRING_K;
+        force[i].x += theForce;
+        force[j].x -= theForce;
+        theForce = (vertices[i].pos.y - vertices[j].pos.y) / length * (restLengths[i][j] - length) * SPRING_K;
+        force[i].y += theForce;
+        force[j].y -= theForce;
+        theForce = (vertices[i].pos.z - vertices[j].pos.z) / length * (restLengths[i][j] - length) * SPRING_K;
+        force[i].z += theForce;
+        force[j].z -= theForce;
+        
+        // Velocity damping - only for adjacent vertices
+        
+        if (isAdjacent[i][j])
+          {
+            dotProduct = ((vertices[i].pos.x - vertices[j].pos.x) *
+                  (vertices[i].vel.x - vertices[j].vel.x) +
+                  (vertices[i].pos.y - vertices[j].pos.y) *
+                  (vertices[i].vel.y - vertices[j].vel.y) +
+                  (vertices[i].pos.z - vertices[j].pos.z) *
+                  (vertices[i].vel.z - vertices[j].vel.z)) /
+          length/length * damping;
+            
+            theForce = dotProduct * (vertices[i].pos.x - vertices[j].pos.x);
+            velForce[i].x -= theForce;
+            velForce[j].x += theForce;
+            theForce = dotProduct * (vertices[i].pos.y - vertices[j].pos.y);
+            velForce[i].y -= theForce;
+            velForce[j].y += theForce;
+            theForce = dotProduct * (vertices[i].pos.z - vertices[j].pos.z); //xxx
+            velForce[i].z -= theForce;
+            velForce[j].z += theForce;
+          }
+      }
+      }
+    // Change the velocities (F = ma !!).  Make sure the velocities don't get too big.
+    // (Stability check).
+    for (i = 0; i < numVertices; i++)
+      {
+        vertices[i].vel.x += (velForce[i].x + force[i].x) / vertices[i].mass;
+        if (fabs(vertices[i].vel.x) > MAX_VEL)
+      vertices[i].vel.x = vertices[i].vel.x / fabs(vertices[i].vel.x) * MAX_VEL;
+        vertices[i].vel.y += (velForce[i].y + force[i].y) / vertices[i].mass;
+        if (fabs(vertices[i].vel.y) > MAX_VEL)
+      vertices[i].vel.y = vertices[i].vel.y / fabs(vertices[i].vel.y) * MAX_VEL;
+        vertices[i].vel.z += (velForce[i].z + force[i].z) / vertices[i].mass;
+        if (fabs(vertices[i].vel.z) > MAX_VEL)
+      vertices[i].vel.z = vertices[i].vel.z / fabs(vertices[i].vel.z) * MAX_VEL;
+      }
       
-      // Velocity damping - only for adjacent vertices
-      
-      if (isAdjacent[i][j])
-        {
-          dotProduct = ((vertices[i].pos.x - vertices[j].pos.x) *
-                (vertices[i].vel.x - vertices[j].vel.x) +
-                (vertices[i].pos.y - vertices[j].pos.y) *
-                (vertices[i].vel.y - vertices[j].vel.y) +
-                (vertices[i].pos.z - vertices[j].pos.z) *
-                (vertices[i].vel.z - vertices[j].vel.z)) /
-        length/length * damping;
-          
-          theForce = dotProduct * (vertices[i].pos.x - vertices[j].pos.x);
-          velForce[i].x -= theForce;
-          velForce[j].x += theForce;
-          theForce = dotProduct * (vertices[i].pos.y - vertices[j].pos.y);
-          velForce[i].y -= theForce;
-          velForce[j].y += theForce;
-          theForce = dotProduct * (vertices[i].pos.z - vertices[j].pos.z); //xxx
-          velForce[i].z -= theForce;
-          velForce[j].z += theForce;
-        }
-    }
-    }
-  // Change the velocities (F = ma !!).  Make sure the velocities don't get too big.
-  // (Stability check).
-  for (i = 0; i < numVertices; i++)
-    {
-      vertices[i].vel.x += (velForce[i].x + force[i].x) / vertices[i].mass;
-      if (fabs(vertices[i].vel.x) > MAX_VEL)
-    vertices[i].vel.x = vertices[i].vel.x / fabs(vertices[i].vel.x) * MAX_VEL;
-      vertices[i].vel.y += (velForce[i].y + force[i].y) / vertices[i].mass;
-      if (fabs(vertices[i].vel.y) > MAX_VEL)
-    vertices[i].vel.y = vertices[i].vel.y / fabs(vertices[i].vel.y) * MAX_VEL;
-      vertices[i].vel.z += (velForce[i].z + force[i].z) / vertices[i].mass;
-      if (fabs(vertices[i].vel.z) > MAX_VEL)
-    vertices[i].vel.z = vertices[i].vel.z / fabs(vertices[i].vel.z) * MAX_VEL;
-    }
-  // return self;
+      // return self;
+      [self setNeedsDisplay: YES];
 }
 
 // Somebody just changed the size of the box we're sitting in - recompute
