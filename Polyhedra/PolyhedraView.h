@@ -68,18 +68,18 @@ float distance(float xcrd, float ycrd, float zcrd)
     int        verticesPerFace;
     int        realAdjacents;
     
-    VERTEX    vertices[MAX_NUM_VERTICES];
-    float        restLengths[MAX_NUM_VERTICES][MAX_NUM_VERTICES];
-    BOOL        isAdjacent[MAX_NUM_VERTICES][MAX_NUM_VERTICES];
+    VERTEX     vertices[MAX_NUM_VERTICES];
+    float      restLengths[MAX_NUM_VERTICES][MAX_NUM_VERTICES];
+    BOOL       isAdjacent[MAX_NUM_VERTICES][MAX_NUM_VERTICES];
     
-    D3_PT        perspectivePt;
-    D3_PT        backTopRight;
+    D3_PT      perspectivePt;
+    D3_PT      backTopRight;
     
-    float        damping;
+    float      damping;
     
-    BOOL        noAnimation;
+    BOOL       noAnimation;
     int        backStep;
-    id            inspectorPanel;
+    id         inspectorPanel;
 }
 
 - (id) useNewFrame: (NSRect)frameRect;

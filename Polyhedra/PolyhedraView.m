@@ -12,7 +12,7 @@
 #import <Foundation/NSBundle.h>
 #import <AppKit/NSNibLoading.h>
 #import <AppKit/NSGraphics.h>
-#import <AppKit/NSMatrix.h>
+// #import <AppKit/NSMatrix.h>
 #import <math.h>
 
 #import <stdlib.h>
@@ -306,9 +306,23 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
     4, 0, TRANSPARENT, TRANSPARENT, TRANSPARENT,
     TRANSPARENT, NO_DRAW, 1, NO_DRAW, 2}};
 
+void drawShapesExample(void) {
+    // Triangle example
+    colourTriangle(50, 50, 150, 50, 100, 150, 1.0, 0.0, 0.0);
+    outlineTriangle(50, 50, 150, 50, 100, 150);
+
+    // Square example
+    colourSquare(200, 50, 300, 50, 300, 150, 200, 150, 0.0, 1.0, 0.0);
+    outlineSquare(200, 50, 300, 50, 300, 150, 200, 150);
+
+    // Pentagon example
+    colourPentagon(400, 100, 450, 150, 425, 200, 375, 200, 350, 150, 0.0, 0.0, 1.0);
+    outlinePentagon(400, 100, 450, 150, 425, 200, 375, 200, 350, 150);
+}
+
 @implementation PolyhedraView
 
-- (instancetype)initWithFrame:(NSRect)frame isPreview:(BOOL)isPreview
+- (instancetype) initWithFrame: (NSRect)frame isPreview: (BOOL)isPreview
 {
     self = [super initWithFrame:frame isPreview:isPreview];
     if (self)
@@ -320,43 +334,44 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
     return self;
 }
 
-- (void)startAnimation
+- (void) startAnimation
 {
     [super startAnimation];
 }
 
-- (void)stopAnimation
+- (void) stopAnimation
 {
     [super stopAnimation];
 }
 
 // Just erase ourself.
-- (void) drawRect:(NSRect)rects // :(int)rectCount
+- (void) drawRect: (NSRect)rect // :(int)rectCount
 {
-    PSsetlinewidth(0);
-    PSsetgray(1);
-    NSRectFill(rects);
+    [super drawRect: rect];
 
-    // NSBezierPath *currentPath = [NSBezierPath bezierPath];
-    // [[NSColor whiteColor] setFill];
-    // [currentPath fill];
+    [[NSColor blackColor] setFill];
+    NSRectFill(rect);
 
+    [self oneStep];
+    // [self.color setFill];
 }
 
-- (void)animateOneFrame
+- (void) animateOneFrame
 {
-    NSLog(@"Step");
-    
+    // [self.window disableFlushWindow];
     [self oneStep];
+    // [self.window enableFlushWindow];
+    
+    [self setNeedsDisplay: YES];
     return;
 }
 
-- (BOOL)hasConfigureSheet
+- (BOOL) hasConfigureSheet
 {
     return NO;
 }
 
-- (NSWindow*)configureSheet
+- (NSWindow*) configureSheet
 {
     return nil;
 }
@@ -860,7 +875,7 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
   [self frameChanged: frameRect];
 }
 
-- useNewFrame:(NSRect)frameRect
+- (id) useNewFrame:(NSRect)frameRect
 {
   int        i, j, k;
   D3_PT    initVel;
@@ -930,10 +945,10 @@ static int faceColour[NUM_POLYHEDRA][MAX_NUM_FACES] =
   return self;
 }
 
-- (id) setSelectedIndex:sender
+- (id) setSelectedIndex: (id)sender
 {
-  int val;
-  val = [sender selectedRow];
+  NSInteger val = 1;
+  // val = [sender selectedRow];
   // NSLog(@"val = %d",val);
   if (selectedIndex == val) return self;
   
