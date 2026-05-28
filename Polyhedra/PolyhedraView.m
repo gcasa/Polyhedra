@@ -27,8 +27,7 @@ float randBetween(float lower, float upper)
       float temp = 0.0;
       temp = lower; lower = upper; upper = temp;
     }
-  result = ((upper - lower) * rand() + lower);
-  printf("upper = %f, lower = %f, result = %f\n",upper,lower,result);
+  result = lower + (upper - lower) * ((float)rand() / (float)RAND_MAX);
   return result;
 }
 
@@ -327,9 +326,9 @@ void drawShapesExample(void) {
     self = [super initWithFrame:frame isPreview:isPreview];
     if (self)
     {
-        [self useNewFrame: frame];
         srand((unsigned int)time(0));
-        [self setAnimationTimeInterval:1/30.0];
+        [self frameChanged: frame];
+        [self setAnimationTimeInterval: 1/30.0];
     }
     return self;
 }
@@ -345,25 +344,20 @@ void drawShapesExample(void) {
 }
 
 // Just erase ourself.
+// Just erase ourself.
 - (void) drawRect: (NSRect)rect // :(int)rectCount
 {
-    [super drawRect: rect];
+  [super drawRect: rect];
 
-    [[NSColor blackColor] setFill];
-    NSRectFill(rect);
+  [[NSColor blackColor] setFill];
+  NSRectFill(rect);
 
-    [self oneStep];
-    // [self.color setFill];
+  [self oneStep];
 }
 
 - (void) animateOneFrame
 {
-    // [self.window disableFlushWindow];
-    [self oneStep];
-    // [self.window enableFlushWindow];
-    
-    [self setNeedsDisplay: YES];
-    return;
+  [self setNeedsDisplay: YES];
 }
 
 - (BOOL) hasConfigureSheet
@@ -702,8 +696,6 @@ void drawShapesExample(void) {
     // If we're not doing anything about the polyhedron, leave now.
     if (noAnimation)
       return;
-    // Erase it.
-    [self erasePolyhedron];
     // Move it, bouncing off walls as necessary
     for (i = 0; i < numVertices; i++)
       {
@@ -787,7 +779,6 @@ void drawShapesExample(void) {
       }
       
       // return self;
-      [self setNeedsDisplay: YES];
 }
 
 // Somebody just changed the size of the box we're sitting in - recompute
@@ -983,13 +974,13 @@ void drawShapesExample(void) {
   // NSLog(@"called");
   if (!inspectorPanel)
     {
-      // NSLog(@"getting inspector");
-      // sprintf(buf,"%s/Polyhedra.nib",[sender moduleDirectory:"Polyhedra"]);
-      // [NXApp loadNibFile:buf owner:self withNames:NO];
-      if(![NSBundle loadNibNamed: @"Polyhedra" owner:self])
-        {
-          NSLog(@"Failed to load");
-        }
+        // NSLog(@"getting inspector");
+        // sprintf(buf,"%s/Polyhedra.nib",[sender moduleDirectory:"Polyhedra"]);
+        // [NXApp loadNibFile:buf owner:self withNames:NO];
+        if(![NSBundle loadNibNamed: @"Polyhedra" owner:self])
+          {
+            NSLog(@"Failed to load");
+          }
     }
   // NSLog(@"inspector: %@",inspectorPanel);
   return inspectorPanel;
