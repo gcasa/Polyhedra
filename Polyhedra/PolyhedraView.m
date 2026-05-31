@@ -336,10 +336,22 @@ void drawShapesExample(void) {
 - (void) startAnimation
 {
     [super startAnimation];
+
+  if (animationTimer == nil)
+  {
+    animationTimer = [NSTimer timerWithTimeInterval: [self animationTimeInterval]
+                         target: self
+                         selector: @selector(animateOneFrame)
+                         userInfo: nil
+                        repeats: YES];
+    [[NSRunLoop currentRunLoop] addTimer: animationTimer forMode: NSRunLoopCommonModes];
+  }
 }
 
 - (void) stopAnimation
 {
+  [animationTimer invalidate];
+  animationTimer = nil;
     [super stopAnimation];
 }
 
@@ -352,12 +364,14 @@ void drawShapesExample(void) {
   [[NSColor blackColor] setFill];
   NSRectFill(rect);
 
-  [self oneStep];
+  [self drawPolyhedron];
 }
 
 - (void) animateOneFrame
 {
+  [self oneStep];
   [self setNeedsDisplay: YES];
+  [self displayIfNeeded];
 }
 
 - (BOOL) hasConfigureSheet
@@ -709,8 +723,6 @@ void drawShapesExample(void) {
         if ((vertices[i].pos.z < 0) || (vertices[i].pos.z > backTopRight.z))
             vertices[i].vel.z = -vertices[i].vel.z;
       }
-    // draw it
-    [self drawPolyhedron];
     for (i = 0; i < numVertices; i++)
       {
         velForce[i].x = force[i].x = 0;

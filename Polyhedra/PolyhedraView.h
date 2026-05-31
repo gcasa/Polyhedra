@@ -79,6 +79,7 @@ float distance(float xcrd, float ycrd, float zcrd)
     
     BOOL       noAnimation;
     int        backStep;
+    NSTimer    *animationTimer;
     id         inspectorPanel;
 }
 
