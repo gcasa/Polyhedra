@@ -337,14 +337,19 @@ void drawShapesExample(void) {
 {
     [super startAnimation];
 
+  // ScreenSaverEngine can instantiate the view with a transient frame.
+  // Recompute physics bounds using the final view bounds when animation starts.
+  [self frameChanged:[self bounds]];
+
+  // Fallback path: some ScreenSaverEngine contexts don't reliably tick
+  // animateOneFrame at the requested interval.
   if (animationTimer == nil)
   {
-    animationTimer = [NSTimer timerWithTimeInterval: [self animationTimeInterval]
-                         target: self
-                         selector: @selector(animateOneFrame)
-                         userInfo: nil
-                        repeats: YES];
-    [[NSRunLoop currentRunLoop] addTimer: animationTimer forMode: NSRunLoopCommonModes];
+    animationTimer = [NSTimer scheduledTimerWithTimeInterval:[self animationTimeInterval]
+                               target:self
+                             selector:@selector(timerTick:)
+                             userInfo:nil
+                              repeats:YES];
   }
 }
 
@@ -353,6 +358,12 @@ void drawShapesExample(void) {
   [animationTimer invalidate];
   animationTimer = nil;
     [super stopAnimation];
+}
+
+- (void) timerTick: (NSTimer *)timer
+{
+  (void)timer;
+  [self animateOneFrame];
 }
 
 // Just erase ourself.
@@ -371,7 +382,7 @@ void drawShapesExample(void) {
 {
   [self oneStep];
   [self setNeedsDisplay: YES];
-  [self displayIfNeeded];
+  [self display];
 }
 
 - (BOOL) hasConfigureSheet
@@ -656,6 +667,11 @@ void drawShapesExample(void) {
     D3_PT    velForce[MAX_NUM_VERTICES], force[MAX_NUM_VERTICES];
     float    theForce;
     D3_PT    sumVel;
+
+    if (noAnimation)
+      {
+        [self frameChanged:[self bounds]];
+      }
     
     // NSLog(@"Called");
     // Cycle the background box colours.
@@ -800,6 +816,7 @@ void drawShapesExample(void) {
   D3_PT    initPos, initVel;
   int    i, j;
   float    length;
+  float    margin;
   
   [self useNewFrame: frameRect];
   
@@ -820,18 +837,20 @@ void drawShapesExample(void) {
   
   // NSLog(@"initVel.x = %f y = %f z = %f",initVel.x, initVel.y, initVel.z);
   
-  // If the room's too small, we're going to have problems, so don't
-  // stick the polyhedron in.
-  if ((frameRect.size.width < 240) || (frameRect.size.height < 240))
+  // Allow animation in preview and small windows by scaling placement margins.
+  // Only disable animation for extremely tiny frames.
+  if ((frameRect.size.width < 40) || (frameRect.size.height < 40))
     noAnimation = YES;
   else
     {
       noAnimation = NO;
+
+      margin = fminf(120.0f, fmaxf(20.0f, fminf(frameRect.size.width, frameRect.size.height) / 4.0f));
       
       // Compute initial position.
-      initPos.x = randBetween((float)120, (float)(frameRect.size.width - 120));
-      initPos.y = randBetween((float)120, (float)(frameRect.size.height - 120));
-      initPos.z = randBetween((float)120, (float)(frameRect.size.height - 120));
+      initPos.x = randBetween(margin, (float)(frameRect.size.width - margin));
+      initPos.y = randBetween(margin, (float)(frameRect.size.height - margin));
+      initPos.z = randBetween(margin, (float)(frameRect.size.height - margin));
       
       //  NSLog(@"initPos.x = %f y = %f z = %f",initPos.x, initPos.y, initPos.z);
 
