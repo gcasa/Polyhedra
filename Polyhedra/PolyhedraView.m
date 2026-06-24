@@ -8,6 +8,7 @@
 #import "PolyhedraView.h"
 #import "PolyhedraViewWraps.h"
 #import "PSOperators.h"
+#import "PolyhedraSheetController.h"
 
 #import <Foundation/NSBundle.h>
 #import <AppKit/NSNibLoading.h>
@@ -16,6 +17,11 @@
 #import <math.h>
 
 #import <stdlib.h>
+
+float distance(float xcrd, float ycrd, float zcrd)
+{
+  return sqrt(xcrd * xcrd + ycrd * ycrd + zcrd * zcrd);
+}
 
 // Randomness...
 float randBetween(float lower, float upper)
@@ -387,12 +393,13 @@ void drawShapesExample(void) {
 
 - (BOOL) hasConfigureSheet
 {
-    return NO;
+    return YES;
 }
 
 - (NSWindow*) configureSheet
 {
-    return nil;
+    [self inspector: self];
+    return inspectorPanel;
 }
 
 // Draw a line in the proper perspectice projection from pt1 to pt2
@@ -969,9 +976,7 @@ void drawShapesExample(void) {
 
 - (id) setSelectedIndex: (id)sender
 {
-  NSInteger val = 1;
-  // val = [sender selectedRow];
-  // NSLog(@"val = %d",val);
+  NSInteger val = [sender tag];
   if (selectedIndex == val) return self;
   
   selectedIndex = val;
@@ -1000,21 +1005,10 @@ void drawShapesExample(void) {
 
 - (id) inspector: (id)sender
 {
-  // char buf[MAXPATHLEN];
-  
-  // NSLog(@"called");
-  if (!inspectorPanel)
-    {
-        // NSLog(@"getting inspector");
-        // sprintf(buf,"%s/Polyhedra.nib",[sender moduleDirectory:"Polyhedra"]);
-        // [NXApp loadNibFile:buf owner:self withNames:NO];
-        if(![NSBundle loadNibNamed: @"Polyhedra" owner:self])
-          {
-            NSLog(@"Failed to load");
-          }
-    }
-  // NSLog(@"inspector: %@",inspectorPanel);
-  return inspectorPanel;
+    PolyhedraSheetController *controller  = [[PolyhedraSheetController alloc] init];
+    inspectorPanel = [controller window];
+
+    return inspectorPanel;
 }
 
 - (BOOL) useBufferedWindow

@@ -52,10 +52,6 @@ extern float randBetween(float lower, float upper);
 // Distance between two points.  Inlined for efficiency.
 float distance(float xcrd, float ycrd, float zcrd);
 
-float distance(float xcrd, float ycrd, float zcrd)
-{
-  return sqrt(xcrd * xcrd + ycrd * ycrd + zcrd * zcrd);
-}
 
 @interface PolyhedraView : ScreenSaverView
 {

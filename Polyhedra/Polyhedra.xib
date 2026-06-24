@@ -1,23 +1,114 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="23727" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="23727"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="PolyhedraView"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
-        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" frameAutosaveName="" animationBehavior="default" id="WVV-xw-BvG">
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="WVV-xw-BvG">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="632" y="697" width="480" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="5120" height="2855"/>
+            <rect key="contentRect" x="632" y="697" width="235" height="269"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="3840" height="2130"/>
             <view key="contentView" id="rvx-45-F94">
-                <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                <rect key="frame" x="0.0" y="0.0" width="235" height="269"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IiI-WU-7Sr">
+                        <rect key="frame" x="39" y="219" width="145" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Random" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="wFl-nH-ZA7">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="setSelectedIndex:" target="slx-2v-mNg" id="yFu-bh-sjT"/>
+                        </connections>
+                    </button>
+                    <button tag="1" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ag1-k6-xQ2">
+                        <rect key="frame" x="39" y="191" width="145" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Tetrahedron" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Tn6-jJ-jUq">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="setSelectedIndex:" target="slx-2v-mNg" id="7Th-vj-Jj7"/>
+                        </connections>
+                    </button>
+                    <button tag="2" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3bX-fy-mfu">
+                        <rect key="frame" x="39" y="163" width="145" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Cube" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="VFx-pd-hgF">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="setSelectedIndex:" target="slx-2v-mNg" id="piq-01-lXC"/>
+                        </connections>
+                    </button>
+                    <button tag="3" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wps-af-NPI">
+                        <rect key="frame" x="39" y="135" width="145" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Octahedron" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="DRZ-AF-Yxu">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="setSelectedIndex:" target="slx-2v-mNg" id="zyJ-UQ-Yhj"/>
+                        </connections>
+                    </button>
+                    <button tag="4" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1BM-Hg-dN4">
+                        <rect key="frame" x="39" y="107" width="145" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Dodecahedron" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="U1n-gL-Rtn">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="setSelectedIndex:" target="slx-2v-mNg" id="D5Y-1l-AJh"/>
+                        </connections>
+                    </button>
+                    <button tag="5" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L6J-Hq-asK">
+                        <rect key="frame" x="39" y="79" width="145" height="22"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="radio" title="Icosahedron" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="aWQ-Vr-xV3">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="setSelectedIndex:" target="slx-2v-mNg" id="JK4-6a-HuD"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CGL-ac-STP">
+                        <rect key="frame" x="39" y="35" width="66" height="24"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Kick It!" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="kTj-hd-bDs">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="kickIt:" target="slx-2v-mNg" id="zbk-A9-6LM"/>
+                        </connections>
+                    </button>
+                </subviews>
             </view>
-            <point key="canvasLocation" x="-6" y="1"/>
+            <point key="canvasLocation" x="-89" y="-410"/>
         </window>
+        <customObject id="slx-2v-mNg" customClass="PolyhedraSheetController">
+            <connections>
+                <outlet property="_cube" destination="3bX-fy-mfu" id="sxY-X4-mlB"/>
+                <outlet property="_dodecahedron" destination="1BM-Hg-dN4" id="Mbg-8T-e2e"/>
+                <outlet property="_icosahedron" destination="L6J-Hq-asK" id="mOv-s6-8BQ"/>
+                <outlet property="_octahedron" destination="Wps-af-NPI" id="Kqa-NA-DMa"/>
+                <outlet property="_random" destination="IiI-WU-7Sr" id="I64-Is-9XA"/>
+                <outlet property="_tetrahedron" destination="ag1-k6-xQ2" id="lTs-0u-tRQ"/>
+                <outlet property="_view" destination="rvx-45-F94" id="j9G-NB-Hqs"/>
+                <outlet property="_window" destination="WVV-xw-BvG" id="q7z-UQ-1HQ"/>
+            </connections>
+        </customObject>
     </objects>
 </document>
